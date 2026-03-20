@@ -25,11 +25,14 @@ function startTrace() {
     let threadId = 0   // 0 = 当前线程
     let options = 0    // 1 = DEBUG 模式
 
+    console.log('start trace')
+
     gumtrace_init(moduleNames, outputPath, threadId, options)
     gumtrace_run()
 }
 
 function stopTrace() {
+    console.log('stop trace')
     gumtrace_unrun()
 }
 

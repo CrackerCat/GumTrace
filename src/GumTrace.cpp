@@ -157,7 +157,42 @@ void GumTrace::callout_callback(GumCpuContext *cpu_context, gpointer user_data) 
                 Utils::format_uint128_hex(reg_value, buff_n, buff);
                 Utils::append_char(buff, buff_n, ' ');
             }
-        } else if ((op.access & CS_AC_WRITE) && op.type == ARM64_OP_MEM) {
+        } else if ((op.access & CS_AC_WRITE) && (op.access & CS_AC_READ) && op.type == ARM64_OP_MEM) {
+            __uint128_t base = 0;
+            __uint128_t index = 0;
+            bool flag = true;
+
+            if (is_first_print) {
+                is_first_print = false;
+                Utils::append_string(buff, buff_n, "; ");
+            }
+
+            if (op.mem.base != ARM64_REG_INVALID) {
+                flag = Utils::get_register_value(op.mem.base, cpu_context, base);
+                const char *base_reg_name = cs_reg_name(callback_ctx->handle, op.mem.base);
+                Utils::append_string(buff, buff_n, base_reg_name);
+                Utils::append_string(buff, buff_n, "=0x");
+                Utils::format_uint128_hex(base, buff_n, buff);
+                Utils::append_char(buff, buff_n, ' ');
+            }
+
+            if (op.mem.index != ARM64_REG_INVALID) {
+                flag = Utils::get_register_value(op.mem.index, cpu_context, index);
+                const char *index_reg_name = cs_reg_name(callback_ctx->handle, op.mem.index);
+                Utils::append_string(buff, buff_n, index_reg_name);
+                Utils::append_string(buff, buff_n, "=0x");
+                Utils::format_uint128_hex(index, buff_n, buff);
+                Utils::append_char(buff, buff_n, ' ');
+            }
+
+            if (flag) {
+                uintptr_t shifted_index = Utils::apply_shift(index, op.shift.type, op.shift.value);
+                uintptr_t write_address = base + shifted_index + op.mem.disp;
+                Utils::append_string(buff, buff_n, "mem_r=0x");
+                Utils::append_uint64_hex(buff, buff_n, write_address);
+                Utils::append_char(buff, buff_n, ' ');
+            }
+        }  else if ((op.access & CS_AC_WRITE) && op.type == ARM64_OP_MEM) {
             __uint128_t base = 0;
             __uint128_t index = 0;
             bool flag = true;
