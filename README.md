@@ -150,7 +150,6 @@ function startTrace() {
     let options = 0    // 1 = DEBUG 模式
 
     console.log('start trace')
-
     gumtrace_init(moduleNames, outputPath, threadId, options)
     gumtrace_run()
 }
