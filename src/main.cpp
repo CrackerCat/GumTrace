@@ -8,7 +8,10 @@
 
 gboolean module_symbols_cb(const GumSymbolDetails * details, gpointer user_data) {
     auto *instance = GumTrace::get_instance();
-    instance->func_maps[details->address] = details->name;
+    if (details && details->name && details->address && details->section->protection & GUM_PAGE_READ) {
+        instance->func_maps[details->address] = details->name;
+    }
+
     // if (details->is_global) {
     //     size_t global_addr = gum_module_find_global_export_by_name(details->name);
     //     if (global_addr > 0) {

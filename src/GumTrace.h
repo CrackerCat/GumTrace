@@ -24,7 +24,7 @@ struct GUM_OPTIONS {
     uint64_t mode;
 };
 
-#define BUFFER_SIZE (1024 * 1024 * 10)
+#define BUFFER_SIZE (1024 * 1024 * 50)
 
 struct FUNC_CONTEXT {
     uint64_t address;

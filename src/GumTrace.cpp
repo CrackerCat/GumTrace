@@ -320,17 +320,19 @@ void GumTrace::callout_callback(GumCpuContext *cpu_context, gpointer user_data) 
             self->trace_file.flush();
             self->trace_flush = 0;
         }
-    } else {
-        if (self->trace_flush > 100000) {
-            if (buff_n > 0) {
-                self->trace_file.write(buff, buff_n);
-                buff_n = 0;
-            }
+    } 
+    
+    // else {
+    //     if (self->trace_flush > 100000) {
+    //         if (buff_n > 0) {
+    //             self->trace_file.write(buff, buff_n);
+    //             buff_n = 0;
+    //         }
 
-            self->trace_file.flush();
-            self->trace_flush = 0;
-        }
-    }
+    //         self->trace_file.flush();
+    //         self->trace_flush = 0;
+    //     }
+    // }
 }
 
 void GumTrace::transform_callback(GumStalkerIterator *iterator, GumStalkerOutput *output, gpointer user_data) {
